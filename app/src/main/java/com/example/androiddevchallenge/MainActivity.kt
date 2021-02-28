@@ -17,45 +17,49 @@ package com.example.androiddevchallenge
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.androiddevchallenge.other.check
+import com.example.androiddevchallenge.ui.navigation.Screen
+import com.example.androiddevchallenge.ui.puppiesdetail.PuppiesDetailScreen
+import com.example.androiddevchallenge.ui.puppieslist.PuppiesListScreen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
+    private val mainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                MyApp(mainViewModel)
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!mainViewModel.onBack()) {
+            super.onBackPressed()
         }
     }
 }
 
-// Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
-    }
-}
-
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun LightPreview() {
-    MyTheme {
-        MyApp()
-    }
-}
-
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun DarkPreview() {
-    MyTheme(darkTheme = true) {
-        MyApp()
+fun MyApp(mainViewModel: MainViewModel) {
+    Crossfade(mainViewModel.currentScreen) { screen ->
+        Surface(color = MaterialTheme.colors.background) {
+            when (screen) {
+                is Screen.PuppiesList -> PuppiesListScreen(mainViewModel::navigateTo).Build()
+                is Screen.PuppiesDetail -> PuppiesDetailScreen(
+                    screen.name,
+                    screen.imageResourceId,
+                    screen.description,
+                    mainViewModel::onBack
+                ).Build()
+            }.check
+        }
     }
 }
