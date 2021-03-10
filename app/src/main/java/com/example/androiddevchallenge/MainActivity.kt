@@ -24,6 +24,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import com.example.androiddevchallenge.other.check
+import com.example.androiddevchallenge.ui.challengelist.ChallengeListScreen
+import com.example.androiddevchallenge.ui.countdown.CountDownScreen
 import com.example.androiddevchallenge.ui.navigation.Screen
 import com.example.androiddevchallenge.ui.puppiesdetail.PuppiesDetailScreen
 import com.example.androiddevchallenge.ui.puppieslist.PuppiesListScreen
@@ -52,6 +54,7 @@ fun MyApp(mainViewModel: MainViewModel) {
     Crossfade(mainViewModel.currentScreen) { screen ->
         Surface(color = MaterialTheme.colors.background) {
             when (screen) {
+                is Screen.ChallengeList -> ChallengeListScreen(mainViewModel::navigateTo).Build()
                 is Screen.PuppiesList -> PuppiesListScreen(mainViewModel::navigateTo).Build()
                 is Screen.PuppiesDetail -> PuppiesDetailScreen(
                     screen.name,
@@ -59,6 +62,7 @@ fun MyApp(mainViewModel: MainViewModel) {
                     screen.description,
                     mainViewModel::onBack
                 ).Build()
+                is Screen.CountDownTimer -> CountDownScreen().Build()
             }.check
         }
     }

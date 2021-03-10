@@ -9,20 +9,20 @@ import com.example.androiddevchallenge.other.getMutableStateOf
 import com.example.androiddevchallenge.ui.navigation.Screen
 import com.example.androiddevchallenge.ui.navigation.Screen.Companion.toBundle
 import com.example.androiddevchallenge.ui.navigation.Screen.Companion.toScreen
-import com.example.androiddevchallenge.ui.navigation.Screen.PuppiesList
+import com.example.androiddevchallenge.ui.navigation.Screen.ChallengeList
 
 class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     var currentScreen: Screen by savedStateHandle.getMutableStateOf<Screen>(
         key = SCREEN_NAME,
-        default = PuppiesList,
+        default = ChallengeList,
         save = { it.toBundle() },
         restore = { it.toScreen() }
     )
 
     @MainThread
     fun onBack(): Boolean {
-        val wasHandled = currentScreen != PuppiesList
-        currentScreen = PuppiesList
+        val wasHandled = currentScreen != ChallengeList
+        currentScreen = ChallengeList
         return wasHandled
     }
 

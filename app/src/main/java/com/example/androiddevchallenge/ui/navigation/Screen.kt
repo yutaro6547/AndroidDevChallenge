@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 
 sealed class Screen(val id: ScreenName) {
+    object ChallengeList: Screen(ScreenName.CHALLENGE_LIST)
     object PuppiesList: Screen(ScreenName.PUPPIES_LIST)
     data class PuppiesDetail(val name: String, val imageResourceId: Int, val description: String    ): Screen(ScreenName.PUPPIES_DETAIL)
+    object CountDownTimer: Screen(ScreenName.COUNTDOWN_TIMER)
 
     companion object {
         private const val SCREEN_NAME = "screen_name"
@@ -24,8 +26,8 @@ sealed class Screen(val id: ScreenName) {
         }
 
         fun Bundle.toScreen(): Screen {
-            val screenName = ScreenName.valueOf(requireNotNull(getString(SCREEN_NAME)) { "Missing key '$SCREEN_NAME' in $this" })
-            return when (screenName) {
+            return when (ScreenName.valueOf(requireNotNull(getString(SCREEN_NAME)) { "Missing key '$SCREEN_NAME' in $this" })) {
+                ScreenName.CHALLENGE_LIST -> ChallengeList
                 ScreenName.PUPPIES_LIST -> PuppiesList
                 ScreenName.PUPPIES_DETAIL -> {
                     val name = requireNotNull(getString(ARGS_NAME)) { "Missing key '$ARGS_NAME' in $this" }
@@ -33,6 +35,7 @@ sealed class Screen(val id: ScreenName) {
                     val description = requireNotNull(getString(ARGS_DESCRIPTION)) { "Missing key '$ARGS_DESCRIPTION' in $this" }
                     PuppiesDetail(name,imageResourceId, description)
                 }
+                ScreenName.COUNTDOWN_TIMER -> CountDownTimer
             }
         }
     }
